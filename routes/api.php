@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::get('/expressions', 'ExpressionController@fetchAll')->name('get-expressions');
+Route::post('/expression', 'ExpressionController@create')->name('create-expression');
+Route::put('/expression/{expressionId}', 'ExpressionController@update')->name('update-expression');
+Route::delete('/expression/{expressionId}', 'ExpressionController@delete')->name('delete-expression');
