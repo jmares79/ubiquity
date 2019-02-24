@@ -53,9 +53,9 @@ class ExpressionNode
             $this->left->dump();
         }
 
-        echo "<pre>NODE:";
-        var_dump($this->value);
-        echo "</pre>";
+        // echo "<pre>NODE:";
+        // var_dump($this->value);
+        // echo "</pre>";
         self::$parsedExpression .= $this->value;
 
         if ($this->right !== null) {

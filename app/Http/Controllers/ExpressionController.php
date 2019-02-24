@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Utils\ExpressionTree;
 use App\Services\ParserService;
 use App\Services\ExpressionService;
+use App\Expression;
+use App\Http\Resources\Expression as ExpressionResource;
+use App\Http\Resources\ExpressionsCollection;
 
 /**
  *  Controller to handle request to expression handling 
@@ -23,8 +27,12 @@ class ExpressionController extends Controller
 
     public function fetchAll(Request $request)
     {
-        // var_dump($request);
-        die("KK");
+        return new ExpressionsCollection(Expression::paginate());
+    }
+
+    public function fetchBy(Request $request, $id)
+    {
+        return new ExpressionResource(Expression::find($id));
     }
 
     public function create(Request $request)
@@ -35,17 +43,26 @@ class ExpressionController extends Controller
         $expressionString = $this->parser->parse($xml['expression'], $tree);
         $s = $tree->traverse();
 
-        $this->expressionService->save($s);
+        $response = $this->expressionService->save($s);
 
-        die("CREATE");
+        return response()->json([
+            'data' => array(
+                'type' => 'expression',
+                'id' => $response->id,
+                'attributes' => array(
+                    'expression' => $response->expression,
+                    'result' => 0
+                )
+            )
+        ], Response::HTTP_CREATED);
     }
 
-    public function update(Request $request, $expressionId)
+    public function update(Request $request, $id)
     {
         die("UPDATING");
     }
 
-    public function delete(Request $request, $expressionId)
+    public function delete(Request $request, $id)
     {
         die("DELETING");
     }

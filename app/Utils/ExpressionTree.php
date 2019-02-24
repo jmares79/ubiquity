@@ -31,10 +31,10 @@ class ExpressionTree
         $node = new ExpressionNode($item);
 
         if ($this->isEmpty()) {
-            echo "ROOT LOADED:\n";
+            // echo "ROOT LOADED:\n";
             $this->root = $node;
-            var_dump($this->root);
-            echo "******************************\n";
+            // var_dump($this->root);
+            // echo "******************************\n";
         } else {
             $this->insertNode($node, $this->root);
         }
@@ -52,21 +52,21 @@ class ExpressionTree
             // }
 
             if ($subtree->left == null) {
-                echo "ABOUT TO INSERT NODE:\n";
-                var_dump($node);
-                echo "\n";
-                echo "INSERTING IT IN LEFT SUBTREE OF:\n";
-                var_dump($subtree);
-                echo "\n";
+                // echo "ABOUT TO INSERT NODE:\n";
+                // var_dump($node);
+                // echo "\n";
+                // echo "INSERTING IT IN LEFT SUBTREE OF:\n";
+                // var_dump($subtree);
+                // echo "\n";
 
                 $this->insertNode($node, $subtree->left);
             } else if ($subtree->right == null){
-                echo "ABOUT TO INSERT NODE:\n";
-                var_dump($node);
-                echo "\n";
-                echo "INSERTING IT IN RIGHT SUBTREE OF :\n";
-                var_dump($subtree);
-                echo "\n";
+                // echo "ABOUT TO INSERT NODE:\n";
+                // var_dump($node);
+                // echo "\n";
+                // echo "INSERTING IT IN RIGHT SUBTREE OF :\n";
+                // var_dump($subtree);
+                // echo "\n";
 
                 $this->insertNode($node, $subtree->right);
             }

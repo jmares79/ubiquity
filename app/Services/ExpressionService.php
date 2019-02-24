@@ -6,11 +6,6 @@ use App\Expression;
 
 class ExpressionService
 {
-    public function __construct()
-    {
-
-    }
-
     public function save($expressionString)
     {
         try {
@@ -19,7 +14,7 @@ class ExpressionService
             $exp->expression = $expressionString;
             $exp->save();
 
-            return $exp::select('id AS expressionId', 'expression', 'created_at AS date');
+            return $exp::select('id','expression')->where('id', $exp->id)->first();
         } catch (QueryException $e) {
             throw new Exception();
         }
