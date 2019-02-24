@@ -16,6 +16,7 @@ class CreateExpressionsTable extends Migration
         Schema::create('expressions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('expression');
+            $table->float('result')->default(0);
             $table->timestamps();
         });
     }
