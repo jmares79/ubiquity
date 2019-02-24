@@ -8,6 +8,8 @@ class ExpressionNode
     public $left;
     public $right;
 
+    static public $parsedExpression;
+
     public function __construct($item)
     {
         $this->value = $item;
@@ -40,6 +42,11 @@ class ExpressionNode
         return $this->right;
     }
 
+    public function getParsedExpression()
+    {
+        return self::$parsedExpression;
+    }
+
     public function dump()
     {
         if ($this->left !== null) {
@@ -49,6 +56,7 @@ class ExpressionNode
         echo "<pre>NODE:";
         var_dump($this->value);
         echo "</pre>";
+        self::$parsedExpression .= $this->value;
 
         if ($this->right !== null) {
             $this->right->dump();

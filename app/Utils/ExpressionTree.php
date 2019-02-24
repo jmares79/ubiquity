@@ -7,10 +7,18 @@ use App\Utils\ExpressionNode;
 class ExpressionTree
 {
     protected $root;
+    static protected $stringExpression = '';
+    // protected $operators = array(
+    //     'add' => '+',
+    //     'minus' => '-',
+    //     'multiply' => '*',
+    //     'divide' => '/',
+    // );
 
     public function __construct()
     {
         $this->root = null;
+        // $this->stringExpression = '';
     }
 
     public function isEmpty()
@@ -23,10 +31,10 @@ class ExpressionTree
         $node = new ExpressionNode($item);
 
         if ($this->isEmpty()) {
-            echo "<pre> ROOT LOADED:<br>";
+            echo "ROOT LOADED:\n";
             $this->root = $node;
-            // var_dump($this);
-            echo "</pre>";
+            var_dump($this->root);
+            echo "******************************\n";
         } else {
             $this->insertNode($node, $this->root);
         }
@@ -34,32 +42,49 @@ class ExpressionTree
 
     protected function insertNode($node, &$subtree)
     {
-        echo "<pre> INSERTING NODE node in subtree:";
-        var_dump($node);
-        var_dump($subtree);
-        var_dump($this);
-        echo "</pre>";
-
         if ($subtree == null) {
             $subtree = $node;
         } else {
+            // if ($subtree->left == null) {
+            //     $subtree->left = $node;
+            // } else {
+            //     $subtree->right = $node;
+            // }
+
             if ($subtree->left == null) {
+                echo "ABOUT TO INSERT NODE:\n";
+                var_dump($node);
+                echo "\n";
+                echo "INSERTING IT IN LEFT SUBTREE OF:\n";
+                var_dump($subtree);
+                echo "\n";
+
                 $this->insertNode($node, $subtree->left);
-            } else {
+            } else if ($subtree->right == null){
+                echo "ABOUT TO INSERT NODE:\n";
+                var_dump($node);
+                echo "\n";
+                echo "INSERTING IT IN RIGHT SUBTREE OF :\n";
+                var_dump($subtree);
+                echo "\n";
+
                 $this->insertNode($node, $subtree->right);
             }
-            
         }
+    }
 
-        // if ($subtree->left == null) {
-        //     $subtree->left = $node;
-        // } else {
-        //     $subtree->right = $node;
-        // }
+    public function traverse() 
+    {
+        $this->root->dump();
 
+        return $this->root->getParsedExpression();
+    }
 
-        echo "<pre> AFTER INSERTION:";
-        var_dump($this);
-        echo "</pre>";
+    /**
+     * Saves the tree to DB in an infix format string
+     */
+    public function save()
+    {
+
     }
 }
