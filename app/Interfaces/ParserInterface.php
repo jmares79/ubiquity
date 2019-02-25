@@ -4,5 +4,5 @@ namespace App\Interfaces;
 
 interface ParserInterface
 {
-    public function parse($expression, &$tree);
+    public function parse($expression/*, &$tree*/);
 }
