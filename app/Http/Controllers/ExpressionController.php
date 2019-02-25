@@ -72,10 +72,10 @@ class ExpressionController extends Controller
     *
     * @return Response HTTP 200 on success,
     * @return Response HTTP 422 when invalid parameters,
-    * @return Response HTTP 404 when non existing transaction,
+    * @return Response HTTP 404 when non existing expression,
     * @return Response HTTP 400 on update error,
     *
-    * @throws TransactionUpdateException|Exception On error while updating a transaction
+    * @throws ExpressionUpdateException|Exception On error while updating a expression
     */
     public function update(Request $request, $id)
     {
@@ -113,7 +113,20 @@ class ExpressionController extends Controller
 
     public function delete(Request $request, $id)
     {
-        die("DELETING");
+        $expression = Expression::find($id);
+        
+        if (null == $expression) { 
+            return response()->json(['message' => 'Expression not found'], Response::HTTP_NOT_FOUND); 
+        }
+
+        try {
+            $response = $this->expressionService->delete($expression);
+            return response()->json(['expression' => "Expression deleted sucessfully"], Response::HTTP_OK);
+        } catch (ExpressionDeleteException $e) {
+            return response()->json(['expression' => "Error while deleting expression"], Response::HTTP_BAD_REQUEST);
+        } catch (Exception $e) {
+            return response()->json(['expression' => "Error while deleting expression"], Response::HTTP_BAD_REQUEST);
+        }
     }
 
 }

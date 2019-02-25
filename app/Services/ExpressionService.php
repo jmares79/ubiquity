@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Expression;
 use App\Exceptions\ExpressionUpdateException;
 use App\Exceptions\ExpressionCreationException;
+use App\Exceptions\ExpressionDeleteException;
 use Illuminate\Database\Query\Builder;
 
 class ExpressionService
@@ -31,6 +32,15 @@ class ExpressionService
             return $expression->select(['id','expression', 'result'])->first();
         } catch (QueryException $e) {
             throw new ExpressionUpdateException();
+        }
+    }
+
+    public function delete(Expression $expression)
+    {
+        try {
+            $expression->delete();
+        } catch (QueryException $e) {
+            throw new ExpressionDeleteException();
         }
     }
 }
