@@ -26,16 +26,44 @@ class ExpressionController extends Controller
         $this->expressionService = $expressionService;
     }
 
+    /**
+     * Gets all expressions
+     *
+     * @param Request $request
+     *
+     * @return mixed A collection with all expressions in JSON format
+     * @return Response HTTP 200 on success,
+     * @return Response HTTP 400 on retrieval error,
+     */
     public function fetchAll(Request $request)
     {
         return new ExpressionsCollection(Expression::paginate());
     }
 
+    /**
+     * Gets an expression by its id
+     *
+     * @param Request $request
+     * @param integer $id Expression id
+     *
+     * @return mixed An expression in JSON format
+     * @return Response HTTP 200 on success,
+     * @return Response HTTP 400 on retrieval error,
+     */
     public function fetchBy(Request $request, $id)
     {
         return new ExpressionResource(Expression::find($id));
     }
 
+    /**
+     * Creates a new expression(s)
+     *
+     * @param Request $request
+     *
+     * @return mixed An expression in JSON format
+     * @return Response HTTP 200 on success,
+     * @return Response HTTP 400 on retrieval error
+     */
     public function create(Request $request)
     {
         $tree = new ExpressionTree();
@@ -66,17 +94,16 @@ class ExpressionController extends Controller
     }
 
     /**
-    * Updates an expression based on information in the request
-    *
-    * @param Request $request The validated information
-    *
-    * @return Response HTTP 200 on success,
-    * @return Response HTTP 422 when invalid parameters,
-    * @return Response HTTP 404 when non existing expression,
-    * @return Response HTTP 400 on update error,
-    *
-    * @throws ExpressionUpdateException|Exception On error while updating a expression
-    */
+     * Updates an expression based on information in the request
+     *
+     * @param Request $request The validated information
+     * @param integer $id Expression id
+     * 
+     * @return Response HTTP 200 on success,
+     * @return Response HTTP 422 when invalid parameters,
+     * @return Response HTTP 404 when non existing expression,
+     * @return Response HTTP 400 on update error,
+     */
     public function update(Request $request, $id)
     {
         $expression = DB::table('expressions')->where('id', $id);
@@ -111,6 +138,17 @@ class ExpressionController extends Controller
         }
     }
 
+    /**
+     * Deletes an expression
+     *
+     * @param Request $request The validated information
+     * @param integer $id Expression id
+     * 
+     * @return Response HTTP 200 on success,
+     * @return Response HTTP 422 when invalid parameters,
+     * @return Response HTTP 404 when non existing expression,
+     * @return Response HTTP 400 on update error,
+     */
     public function delete(Request $request, $id)
     {
         $expression = Expression::find($id);
@@ -121,6 +159,7 @@ class ExpressionController extends Controller
 
         try {
             $response = $this->expressionService->delete($expression);
+
             return response()->json(['expression' => "Expression deleted sucessfully"], Response::HTTP_OK);
         } catch (ExpressionDeleteException $e) {
             return response()->json(['expression' => "Error while deleting expression"], Response::HTTP_BAD_REQUEST);
@@ -128,5 +167,4 @@ class ExpressionController extends Controller
             return response()->json(['expression' => "Error while deleting expression"], Response::HTTP_BAD_REQUEST);
         }
     }
-
 }

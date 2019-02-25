@@ -10,6 +10,15 @@ use Illuminate\Database\Query\Builder;
 
 class ExpressionService
 {
+    /**
+     * Creates a new expression
+     *
+     * @param string $expressionString
+     *
+     * @return mixed An expression fetched from the DB
+     * 
+     * @throws ExpressionCreationException On error while creating the expression
+     */
     public function save($expressionString)
     {
         try {
@@ -24,6 +33,16 @@ class ExpressionService
         }
     }
 
+    /**
+     * Updates an expression
+     *
+     * @param Builder $expression Expression to be updated
+     * @param string $expressionString New data
+     *
+     * @return mixed An expression fetched from the DB
+     *
+     * @throws ExpressionUpdateException On error while updating the expression
+     */
     public function update(Builder $expression, $newExpression)
     {
         try {
@@ -35,6 +54,13 @@ class ExpressionService
         }
     }
 
+    /**
+     * Deletes an expression
+     *
+     * @param Expression $expression Expression to be deleted
+     *
+     * @throws ExpressionDeleteException On error while deleting the expression
+     */
     public function delete(Expression $expression)
     {
         try {
