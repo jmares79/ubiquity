@@ -61,7 +61,7 @@ For example, a ParsingInterface was created with a `parse` method to implement, 
 
 As the parsing calls a parse, the code will work with a minimum requirement of code changing.
 
-## Installation
+## Installation and usage
 
 Just clone this repo to any desired folder (either a XAMPP htdocs, Docker PHP container or anything that suits you) and execute `composer install` in the command line.
 
@@ -69,6 +69,7 @@ Start your web server & MySQL server (for developing purposes I use the built in
 
 After that, create the schema in the desired DDBB and run `php artisan migrate` to run migrations and create schema tables.
 
+http://127.0.0.1:80/ubiquity/public/<end-point>
 
 ```
 If any of those DDBBs seems incorrect, just change the names in the .env file located at the root of the structure. Also, there are some dummy seeds created for testing purposes.
