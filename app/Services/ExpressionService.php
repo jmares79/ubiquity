@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Expression;
+use App\Exceptions\ExpressionUpdateException;
+use App\Exceptions\ExpressionCreationException;
+use Illuminate\Database\Query\Builder;
 
 class ExpressionService
 {
@@ -14,9 +17,20 @@ class ExpressionService
             $exp->expression = $expressionString;
             $exp->save();
 
-            return $exp::select('id','expression')->where('id', $exp->id)->first();
+            return $exp::select('id','expression', 'result')->where('id', $exp->id)->first();
         } catch (QueryException $e) {
-            throw new Exception();
+            throw new ExpressionCreationException();
+        }
+    }
+
+    public function update(Builder $expression, $newExpression)
+    {
+        try {
+            $expression->update(['expression' => $newExpression]);
+
+            return $expression->select(['id','expression', 'result'])->first();
+        } catch (QueryException $e) {
+            throw new ExpressionUpdateException();
         }
     }
 }
