@@ -7,18 +7,23 @@ use App\Utils\ExpressionNode;
 class ExpressionTree
 {
     protected $root;
-    static protected $stringExpression = '';
-    // protected $operators = array(
-    //     'add' => '+',
-    //     'minus' => '-',
-    //     'multiply' => '*',
-    //     'divide' => '/',
-    // );
+    protected $current;
+    protected $currentStack = array();
 
     public function __construct()
     {
         $this->root = null;
-        // $this->stringExpression = '';
+        $this->current = null;
+    }
+
+    public function __destruct()
+    {
+        $this->currentStack = null;
+    }
+
+    public function getRoot()
+    {
+        return $this->root;
     }
 
     public function isEmpty()
@@ -26,47 +31,64 @@ class ExpressionTree
         return $this->root == null;
     }
 
-    public function add($item)
+    public function pushNode(ExpressionNode $node)
     {
-        $node = new ExpressionNode($item);
+        array_push($this->currentStack, $node);
+    }
+
+    public function popCurrentNode()
+    {
+        $this->current = array_pop($this->currentStack);
+    }
+
+    public function add(ExpressionNode $node)
+    {
+        echo "ADDING NODE\n";
+        var_dump($node);
+        echo "\n";
+
+        // $this->current = array_pop($this->currentStack);
 
         if ($this->isEmpty()) {
-            // echo "ROOT LOADED:\n";
+            echo "ROOT LOADED:\n";
+
             $this->root = $node;
-            // var_dump($this->root);
-            // echo "******************************\n";
+            $this->current = $this->root;
+            // array_push($this->currentStack, $this->root);
+
+            var_dump($this->root);
+            echo "\n";
         } else {
-            $this->insertNode($node, $this->root);
+            $this->insertNode($node, $this->current);
         }
     }
 
     protected function insertNode($node, &$subtree)
     {
+        echo "SUBTREE\n";
+        var_dump($subtree);
+        echo "\n";
+
         if ($subtree == null) {
             $subtree = $node;
         } else {
-            // if ($subtree->left == null) {
-            //     $subtree->left = $node;
-            // } else {
-            //     $subtree->right = $node;
-            // }
-
             if ($subtree->left == null) {
-                // echo "ABOUT TO INSERT NODE:\n";
-                // var_dump($node);
-                // echo "\n";
-                // echo "INSERTING IT IN LEFT SUBTREE OF:\n";
-                // var_dump($subtree);
-                // echo "\n";
+                echo "ABOUT TO INSERT NODE:\n";
+                var_dump($node);
+
+                echo "\n";
+                echo "INSERTING IT IN LEFT SUBTREE OF:\n";
+                var_dump($subtree);
+                echo "\n";
 
                 $this->insertNode($node, $subtree->left);
-            } else if ($subtree->right == null){
-                // echo "ABOUT TO INSERT NODE:\n";
-                // var_dump($node);
-                // echo "\n";
-                // echo "INSERTING IT IN RIGHT SUBTREE OF :\n";
-                // var_dump($subtree);
-                // echo "\n";
+            } else if ($subtree->right == null) {
+                echo "ABOUT TO INSERT NODE:\n";
+                var_dump($node);
+                echo "\n";
+                echo "INSERTING IT IN RIGHT SUBTREE OF :\n";
+                var_dump($subtree);
+                echo "\n";
 
                 $this->insertNode($node, $subtree->right);
             }

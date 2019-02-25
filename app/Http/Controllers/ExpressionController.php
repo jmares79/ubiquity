@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Utils\ExpressionTree;
 use App\Services\ParserService;
 use App\Services\ExpressionService;
 use App\Http\Resources\Expression as ExpressionResource;
@@ -17,7 +16,7 @@ use App\Expression;
  */
 class ExpressionController extends Controller
 {
-    protected $tree;
+    // protected $tree;
     protected $parser;
 
     public function __construct(ParserService $parserService, ExpressionService $expressionService)
@@ -66,12 +65,13 @@ class ExpressionController extends Controller
      */
     public function create(Request $request)
     {
-        $tree = new ExpressionTree();
+        // $tree = new ExpressionTree();
         $xml = \Parser::xml($request->getContent());
 
-        $expressionString = $this->parser->parse($xml['expression'], $tree);
-        $s = $tree->traverse();
-
+        $expressionString = $this->parser->parse($xml['expression']/*, $tree*/);
+        $s = $this->parser->traverse();
+        var_dump($s);
+        die;
         try {
             $response = $this->expressionService->save($s);
 
