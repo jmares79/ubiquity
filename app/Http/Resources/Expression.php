@@ -17,6 +17,11 @@ class Expression extends JsonResource
         return [
             'data' => [
                 'expression' => $this->expression,
+                'id' => $this->id,
+                'result' => $this->result,
+            ],
+            'links' => [
+                'self' => route('get-expression', ['id' => $this->id]),
             ],
         ];
     }

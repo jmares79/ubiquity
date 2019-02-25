@@ -52,7 +52,13 @@ class ExpressionController extends Controller
      */
     public function fetchBy(Request $request, $id)
     {
-        return new ExpressionResource(Expression::find($id));
+        $expression = Expression::find($id);
+
+        if (null == $expression) {
+            return response()->json(['message' => 'Expression not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return new ExpressionResource($expression);
     }
 
     /**

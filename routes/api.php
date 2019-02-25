@@ -13,10 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::get('/expressions', 'ExpressionController@fetchAll')->name('get-expressions');
 Route::get('/expression/{id}', 'ExpressionController@fetchBy')->where(['id' => '[0-9]+'])->name('get-expression');
 Route::post('/expression', 'ExpressionController@create')->name('create-expression');
