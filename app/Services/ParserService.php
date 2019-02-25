@@ -6,11 +6,14 @@ use App\Interfaces\ParserInterface;
 use App\Utils\ExpressionTree;
 use App\Utils\ExpressionNode;
 
+/**
+ * Class for implementing a Parsing service, in charge of executing the XML parsing 
+ */
 class ParserService implements ParserInterface
 {
     protected $tree;
     protected $currentNode;
-    // protected $currentStack = array();
+    protected $expressionRepresentations = array();
 
     protected $operators = array(
         'add' => '+',
@@ -21,7 +24,6 @@ class ParserService implements ParserInterface
 
     public function __construct()
     {
-        $this->tree = new ExpressionTree();
     }
 
     public function __destruct()
@@ -29,61 +31,78 @@ class ParserService implements ParserInterface
         $this->tree = null;
     }
 
-    public function parse($expression/*, &$tree*/)
+    /**
+     * Parses the array of expressions fetched from the input XML 
+     * 
+     * @param array $expressions The array of parsed XML expressions in the indicated format of the test
+     * 
+     * @return array An array with the formula as a string of the parsed tree
+     */
+    public function parse($expressions)
+    {
+        foreach ($expressions as $key => $expression) {
+            $this->tree = $this->createExpressionTree();
+
+            $this->parseIndividualExpression($expression);
+
+            $this->expressionRepresentations[] = $this->tree->traverse();
+            $this->tree->cleanParsedExpression();
+        }
+
+        return $this->expressionRepresentations;
+    }
+
+    /**
+     * Parses an individual expression from the array of XML expressions 
+     * 
+     * @param array $expression The array of a single XML expression
+     * 
+     * @return void Creates the Expression Tree in memory and uses it to create the arithmetic expression
+     */
+    protected function parseIndividualExpression($expression)
     {
         foreach ($expression as $type => $subExpression) {
-            echo "\n";
-            var_dump($type);
-            var_dump($subExpression);
-            echo "\n";
-
             //Is operator
             if (array_key_exists($type, $this->operators)) {
-                echo "$type EXISTS in operators with result {$this->operators[$type]}\n";
                 $item = $this->operators[$type];
-                $node = new ExpressionNode($item);
+                $node = $this->createExpressionNode($item);
 
                 $this->tree->add($node);
                 $this->tree->pushNode($node);
 
-                echo "TREE AFTER INSERTION:\n";
-                var_dump($this->tree);
-                echo "\n";
-
-                $this->parse($subExpression/*, $tree*/);
+                $this->parseIndividualExpression($subExpression/*, $tree*/);
             } else if ($type == 'number' && !is_array($subExpression)) {
-                echo "IS A NUMBER WITH VALUE $subExpression\n";
                 $item = $subExpression;
-                $node = new ExpressionNode($item);
+                $node = $this->createExpressionNode($item);
 
                 //As it's a number, and not an operator, we don't insert it in the current stack
                 $this->tree->popCurrentNode();
                 $this->tree->add($node);
-                echo "TREE AFTER INSERTION:\n";
-                var_dump($this->tree);
-                echo "\n";
             } else {
-                echo "ARRAY OF 2 NUMBERS:\n";
-                var_dump($subExpression[0]);
-                var_dump($subExpression[1]);
-
                 $this->tree->popCurrentNode();
 
-                $nodeLeft = new ExpressionNode($subExpression[0]); 
+                $nodeLeft = $this->createExpressionNode($subExpression[0]); 
                 $this->tree->add($nodeLeft);
 
-                $nodeRight = new ExpressionNode($subExpression[1]); 
+                $nodeRight = $this->createExpressionNode($subExpression[1]); 
                 $this->tree->add($nodeRight);
-                
-                echo "TREE AFTER INSERTION:\n";
-                var_dump($this->tree);
-                echo "\n";
             }
         }
     }
 
-    public function traverse()
+    /**
+     * Pseudo factory method for proper mocking of an Expression node
+     */
+    protected function createExpressionNode($item)
     {
-        return $this->tree->traverse();
+        return new ExpressionNode($item);
+    }
+
+    /**
+     * Pseudo factory method for proper mocking of an Expression tree
+     */
+    protected function createExpressionTree()
+    {
+        return new ExpressionTree();
     }
 }

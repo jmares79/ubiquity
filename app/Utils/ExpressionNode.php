@@ -47,15 +47,17 @@ class ExpressionNode
         return self::$parsedExpression;
     }
 
+    public function cleanParsedExpression()
+    {
+        self::$parsedExpression = '';
+    }
+
     public function dump()
     {
         if ($this->left !== null) {
             $this->left->dump();
         }
 
-        // echo "<pre>NODE:";
-        // var_dump($this->value);
-        // echo "</pre>";
         self::$parsedExpression .= $this->value;
 
         if ($this->right !== null) {

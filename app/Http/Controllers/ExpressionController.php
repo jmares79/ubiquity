@@ -9,6 +9,7 @@ use App\Services\ExpressionService;
 use App\Http\Resources\Expression as ExpressionResource;
 use App\Http\Resources\ExpressionsCollection;
 use Illuminate\Support\Facades\DB;
+use App\Utils\SimpleFormulaProcessor;
 use App\Expression;
 
 /**
@@ -65,24 +66,27 @@ class ExpressionController extends Controller
      */
     public function create(Request $request)
     {
-        // $tree = new ExpressionTree();
         $xml = \Parser::xml($request->getContent());
 
-        $expressionString = $this->parser->parse($xml['expression']/*, $tree*/);
-        $s = $this->parser->traverse();
-        var_dump($s);
-        die;
+        $representations = $this->parser->parse($xml['expression']);
+        $attr = array();
+
         try {
-            $response = $this->expressionService->save($s);
+            foreach ($representations as $key => $rep) {
+                $res = SimpleFormulaProcessor::calculateFromString($rep);
+                $response = $this->expressionService->save($rep, $res);
+
+                $attr[] = array(
+                    'expression' => $response->expression,
+                    'id' => $response->id,
+                    'result' => $response->result,
+                );
+            }
 
             return response()->json([
                 'data' => array(
                     'type' => 'expression',
-                    'id' => $response->id,
-                    'attributes' => array(
-                        'expression' => $response->expression,
-                        'result' => $response->result
-                    )
+                    'attributes' => $attr
                 )
             ], Response::HTTP_CREATED);
         } catch (ExpressionCreationException $e) {

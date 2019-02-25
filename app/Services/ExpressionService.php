@@ -19,12 +19,13 @@ class ExpressionService
      * 
      * @throws ExpressionCreationException On error while creating the expression
      */
-    public function save($expressionString)
+    public function save($expressionString, $result)
     {
         try {
             $exp = new Expression;
 
             $exp->expression = $expressionString;
+            $exp->result = $result;
             $exp->save();
 
             return $exp::select('id','expression', 'result')->where('id', $exp->id)->first();
